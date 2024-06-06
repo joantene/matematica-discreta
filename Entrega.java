@@ -511,7 +511,37 @@ class Entrega {
      * Calculau el mínim comú múltiple de `a` i `b`.
      */
     static int exercici1(int a, int b) {
-      return -1; // TO DO
+         //Declaración de las variables denominador, numerador
+        int denominador, numerador;
+        //Comprobamos cual de los dos números és más grande a o b para asignar los valores del denominador i númerados
+        if (a>b) {
+            numerador=a;
+            denominador=b;
+        }
+        else{
+            numerador=b;
+            denominador=a;
+        }
+        //Declaramos la variable resto inicializada a 1;
+        int resto=1;
+        //declaración de un bucle que sigue mientras el resto sea diferente a 0
+        while(resto!=0) {
+            //Calculamos el resto
+            resto=numerador%denominador;
+            //Condicional que comprueba si el resto es 0 para salir del bucle
+            if (resto==0) {
+                break;
+            }
+            //Asignación del nuevo numerador y divisor
+            numerador=denominador;
+            denominador=resto;
+        }
+        
+        //calculamos el minimo común multiple
+        int mcm=(a*b)/denominador;
+        
+        //devolvemos el valor
+      return mcm; // TODO
     }
 
     /*
