@@ -42,7 +42,7 @@ import java.util.stream.Stream;
  * Per entregar, posau a continuació els vostres noms i entregau únicament aquest fitxer.
  * - Nom 1:
  * - Nom 2:
- * - Nom 3:
+ * - Nom 3:aa
  *
  * L'entrega es farà a través d'una tasca a l'Aula Digital que obrirem abans de la data que se us
  * hagui comunicat i vos recomanam que treballeu amb un fork d'aquest repositori per seguir més
