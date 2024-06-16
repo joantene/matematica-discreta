@@ -40,9 +40,9 @@ import java.util.stream.Stream;
  *
  * Podeu fer aquesta entrega en grups de com a màxim 3 persones, i necessitareu com a minim Java 10.
  * Per entregar, posau a continuació els vostres noms i entregau únicament aquest fitxer.
- * - Nom 1:
- * - Nom 2:
- * - Nom 3:aa
+ * - Nom 1:Joan Tenerife Perelló
+ * - Nom 2: Alberto Segura Calvo
+ * 
  *
  * L'entrega es farà a través d'una tasca a l'Aula Digital que obrirem abans de la data que se us
  * hagui comunicat i vos recomanam que treballeu amb un fork d'aquest repositori per seguir més
@@ -70,30 +70,133 @@ class Entrega {
      *
      * Vegeu el mètode Tema1.tests() per exemples.
      */
-    static int exercici1(int n) {
-      return 0; // TODO
-    }
+     static int exercici1(int n) {
+            //Declaració de variable contador
+            int cont = 0; 
+            //Declaració d'un array boolea per poder saber si el valor es 1 o es 0
+            boolean [] proposicions= new boolean[n];
+            
+            //Inicialitzam tots els valors de l'indice a true 
+            for (int indice=0;indice<proposicions.length;indice++) {
+                proposicions[indice]=true;
+            }
+            do {
+                //Provam els casos de les proposicions amb tots els casos posibles (00,01,10,11)
+                 proposicions[0]=!proposicions[0];
+            for (int indice=1;indice<proposicions.length;indice++) {
+                if (!proposicions[indice-1]) {
+                    proposicions[indice]=!proposicions[indice];
+                } else {
+                    break;
+                }
+            }
+                //Comprovam si el cas funciana i l'afegim al contador
+                boolean cas = proposicions[0];  
+            for (int indice=1;indice<proposicions.length;indice++) {
+                cas=(!cas)||(proposicions[indice]);
+            }
+            if (cas) {
+                cont++;
+            }
+                //Verificació de si tots els casos són verdaders cosa que vol dir que podem sortir del bucle
+            } while (!vertader(proposicions));
+
+            //resultado
+            return cont;
+        }
+
+
+        //metode vertader
+        public static boolean vertader(boolean[] proposicions) {
+            for (boolean boolea : proposicions) {
+                if (!boolea) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
 
     /*
      * És cert que ∀x : P(x) -> ∃!y : Q(x,y) ?
      */
-    static boolean exercici2(int[] universe, Predicate<Integer> p, BiPredicate<Integer, Integer> q) {
-      return false; // TODO
-    }
+      static boolean exercici2(int[] universe, Predicate<Integer> p, BiPredicate<Integer, Integer> q) {
+           //Declaracion de una variable de tipo boolean para devolver el valor
+        boolean valor=true;
+        // Bucle para comprovar todo x en el universo
+        for(int x=0;x<universe.length;x++) {
+            //Condicional para comprovar si se cumple P(x)
+            if(p.test(universe[x])) {
+                //Declaración de una variable de tipo int para que haga de contador
+                int cont=0;
+                //Bucle para comprovar toda y en el universo
+                for(int y=0;y<universe.length;y++) {
+                    //Condicional para comprovar si se cumple Q(x,y)
+                    if (q.test(universe[x],universe[y])) {
+                         //Si se cumple aumentamos en un caso el contador
+                         cont++;
+                    }
+                }
+              //Comprovamos si el numero del contador es diferente de 1{
+            //Si lo es variable valor=false
+            if(cont!=1) {
+                valor=false;
+            }
+            }
+        }
+        //Devolvemos el valor
+            return valor; // TODO
+        }
 
     /*
      * És cert que ∃x : ∀y : Q(x, y) -> P(x) ?
      */
     static boolean exercici3(int[] universe, Predicate<Integer> p, BiPredicate<Integer, Integer> q) {
-      return false; // TODO
-    }
+            //comprovam els casos de x
+            for (int x:universe) {
+                boolean predicat=true;
+                //Cercam si hi ha algun cas per y el qual sigui negatiu cosa que vol dir que serà fals
+                for (int y:universe) {
+                    if (!q.test(x,y) && p.test(x)) {
+                        predicat=false;
+                    }
+                }
+                //si trobam algun cas de y retornam el valor vertader
+                if (predicat=true) {
+                    return predicat;
+                }
+            }
+            return false; // TODO
+        }
 
     /*
      * És cert que ∃x : ∃!y : ∀z : P(x,z) <-> Q(y,z) ?
      */
     static boolean exercici4(int[] universe, BiPredicate<Integer, Integer> p, BiPredicate<Integer, Integer> q) {
-      return false; // TODO
-    }
+            int conty=0;
+            //Miram si hi ha alguna x
+            for (int x : universe) {
+                conty=0;
+                //Comprovam que només hi hagi una y
+                for (int y : universe) {
+                    boolean casZ = true;
+                    //S ha de complir per tot z
+                    for (int z : universe) {
+                        if (p.test(x,z)!=q.test(y, z)){
+                            casZ = false;
+                        }
+                    }
+                    if (casZ) {
+                        conty++;
+                    }
+                }
+                //Condicional que s executa quan s'ha trobat un sol cas de y
+                if (conty==1) {
+                    return true;
+                }
+            }
+            return false; // TODO
+        }
 
     /*
      * Aquí teniu alguns exemples i proves relacionades amb aquests exercicis (vegeu `main`)
@@ -202,8 +305,43 @@ class Entrega {
      *
      * Podeu soposar que `a`, `b` i `c` estan ordenats de menor a major.
      */
-    static int exercici1(int[] a, int[] b, int[] c) {
-      return -1; // TODO
+     static int exercici1(int[] a, int[] b, int[] c) {
+      //Declaració de distints arrays per almacenar la unio i la diferencia
+      int [] unio= new int [20];
+      int [] dif=new int [100];
+      //Declaracio d'una variable contador per utilitzalo d'indice
+      int contUnio=0;
+      //Comprovam els casos en els que son igual i les guardam
+      for (int indicea=0;indicea<a.length;indicea++) {
+        for (int indiceb=0;indiceb<b.length;indiceb++) {
+          if (a[indicea]==b[indiceb]) {
+            unio[contUnio]=a[indicea];
+            contUnio++;
+            
+          }
+        }
+      }
+      //Declaracio d'una variable contador per utilitzalo d'indice
+      int contDif=0;
+      
+      //Comprovam els casos en els que s hagi de fer la diferencia i les guardam
+       // Afegim els elements de 'a' que no estiguin a 'c' a la diferència
+    for (int indicea = 0;indicea< a.length;indicea++) {
+        boolean x=false;
+        for (int indicec= 0;indicec<c.length;indicec++) {
+            if (a[indicea]==c[indicec]) {
+                x=true;
+                break;
+            }
+        }
+        if (!x) {
+            dif[contDif++]=a[indicea];
+            contDif++;
+        }
+    }
+ 
+       int prodCar=contUnio*contDif;
+      return prodCar; // TODO
     }
 
     /*
@@ -214,9 +352,34 @@ class Entrega {
      *
      * Podeu soposar que `a` i `rel` estan ordenats de menor a major (`rel` lexicogràficament).
      */
-    static int exercici2(int[] a, int[][] rel) {
-      return -1; // TODO
-    }
+      static int exercici2(int[] a, int[][] rel) {
+            //numero de elementos
+            HashSet<int[]> elements = new HashSet<>();
+            for (int e : a) {
+                int[] l={e, e};
+                elements.add(l);
+            }//Clausula reflexiva
+            for (int[] e : rel) {
+                 if (e[0]==e[1]) {
+                    continue;
+                }
+                int[] l = {e[1], e[0]};
+                  elements.add(e);
+                elements.add(l);
+            } //Clausula simètrica 
+            for (int indice=0;indice<a.length-1;indice++) {
+                for (int[] y : rel) {
+                  for (int[] x : rel) {
+                      if (x[0]==y[1]) {
+                           elements.add(new int[]{y[0], x[1]});
+                        }
+
+                    }
+                }
+            }//Clausula transitiva 
+            //Retornam el valor
+            return elements.size(); // TODO
+        }
 
     /*
      * Comprovau si la relació `rel` és un ordre total sobre `a`. Si ho és retornau el nombre
@@ -224,9 +387,97 @@ class Entrega {
      *
      * Podeu soposar que `a` i `rel` estan ordenats de menor a major (`rel` lexicogràficament).
      */
-    static int exercici3(int[] a, int[][] rel) {
-      return -1; // TODO
-    }
+     static int exercici3(int[] a, int[][] rel) {
+            //Declaracio de un boolea inicialitzada en falsa
+               boolean bool=false;
+              if(!reflexiva(a, rel) || !antisimetric(a, rel) || !transitiba(a, rel)) {bool=true;}
+            if (bool) {
+                return -2;
+            }
+            return aristes(rel);
+        }
+        static int aristes(int[][] rel) {
+            HashSet<int[]> elelments=new HashSet<>();
+              int cont=0;
+               for (int[] indice : rel) {
+                if (indice[0]!=indice[1]) {
+                    elelments.add(new int[]{indice[0], indice[1]});
+                }
+            }
+             int indice = 0;
+               int[][] composicio=new int[elelments.size()][2];
+             for (int[] indice1 : elelments) {
+                  if (ExisteixArista(composicio,indice1)) {
+                       composicio[indice++]=indice1;
+                }
+            }
+            return indice;
+        }
+        static boolean ExisteixArista(int[][] arr, int[] comp) {
+            for (int[] indice : arr) {
+                boolean bool1=false;
+                if (indice[0]==0&&(indice[1]==comp[0]||indice[1]==comp[1])&&
+                        (indice[0]==comp[0]||indice[0]==comp[1])) {
+                    bool1=true;
+                }
+                if (bool1) {
+                    return true;
+                }
+                boolean bool2=false;
+                if (indice[1]==0&&(indice[0]==comp[0]||indice[0]==comp[1])
+                        &&(indice[1]==comp[0]||indice[1]==comp[1])) {
+                bool2=true;
+            }
+                if (bool2) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        static boolean reflexiva(int[] a, int[][] rel) {
+            for (int indice : a) {
+                boolean existeix;
+                 existeix=false;
+                  for (int[] comparacion : rel) {
+                    if (indice==comparacion[0]&&indice==comparacion[1]) {
+                         existeix=true;
+                    }
+                }
+                    if (!existeix) {
+                       return existeix;
+                }
+            }
+            return true;
+        }
+        static boolean antisimetric(int[] a, int[][] rel) {
+            for (int[] indice : rel) {
+                for (int[] par2 : rel) {
+                    if (indice[0]==par2[1]&&
+                            indice[1]==par2[0]&&indice!= par2) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+        static boolean transitiba(int[] a, int[][] rel) {
+            for (int[] indice1 : rel) {
+                for (int[] indice2 : rel) {
+                    if (indice1[1]==indice2[0]) {
+                        boolean existeixe=false;
+                        for (int[] par3 : rel) {
+                            if (indice1[0]==par3[0] 
+                                    &&indice2[1]==par3[1]) {
+                                existeixe=true;
+                            }
+                        }
+                         return true;
+                    }
+                }
+            }
+               return false;
+        }
+
 
 
     /*
@@ -237,16 +488,97 @@ class Entrega {
      * lexicogràficament).
      */
     static int[][] exercici4(int[] a, int[][] rel1, int[][] rel2) {
-      return new int[][] {}; // TODO
-    }
+             HashSet<int[]> elements=new HashSet<>();
+            int[][] composicion;
+             boolean bool=false;
+              if(!funcio(a,rel1)||!funcio(a,rel2)) {bool=true;}
+            if (bool) {
+                return null;
+            }
+             for (int[] indice : rel1) {
+                   for (int[] indice2 : rel2) {
+                    if (indice[1]==indice2[0]) {
+                        elements.add(new int[]{indice[0], indice2[1]});
+                    }
+                }
+            }
+            int indice=0;
+            composicion=new int[elements.size()][2];
+            for (int[] num : elements) {
+                  if (!in(composicion,num)) {
+                    composicion[indice++] = num;
+                 }
+            }
+            return composicion;
+        }
+        static boolean in(int[][] arr, int[] comp) {
+            for (int[] indice1 : arr) {
+                if (comp[0]==indice1[0]&&comp[1]==indice1[1]) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        // Método que verifica si una relación es una función gráfica
+        public static boolean funcio(int[] a, int[][] rel) {
+            boolean[] domini = new boolean[a.length];
+             boolean[] codomini = new boolean[a.length];
+            for (int[] indice : rel) {
+                  int dominio=indice[0];
+                  int codominio=indice[1];
+                 for (int indice2=0;indice2<a.length;indice2++) {
+                      if (a[indice2]==dominio) {
+                         if (domini[indice2]) {
+                             return false;
+                        }
+                         domini[indice2]=true;
+                    }
+                     if (a[indice2]==codominio) {
+                         if (codomini[indice2]) {
+                               return false;
+                        }
+                           codomini[indice2]=true;
+                    }
+                }
+            }
+            for (int indice=0;indice<a.length;indice++) {
+                if (!domini[indice]||!codomini[indice]) {
+                    return false;
+                }
+            }
+            return true;
+        }
 
     /*
      * Comprovau si la funció `f` amb domini `dom` i codomini `codom` té inversa. Si la té, retornau
      * el seu graf (el de l'inversa). Sino, retornau null.
      */
-    static int[][] exercici5(int[] dom, int[] codom, Function<Integer, Integer> f) {
-      return new int[][] {}; // TODO
-    }
+     static int[][] exercici5(int[] dom, int[] codom, Function<Integer, Integer> f) {
+            int[][] inversa=new int[dom.length][2];
+            for (int indice1 : dom) {
+                    for (int indice2 : dom) {
+                       if (f.apply(indice1)==f.apply(indice2) && indice1!=indice2) {
+                           return null;
+                    }
+                }
+            }
+             for (int indice1 : codom) {
+                  boolean booly = false;
+                for (int indice2 : dom) {
+                    if (f.apply(indice2) == indice1) {
+                        booly = true;
+                    }
+                }
+                    if (!booly) {
+                      return null;
+                }
+            }
+             for (int indice=0;indice<dom.length;indice++) {
+                   inversa[indice]=new int[]{f.apply(dom[indice]),dom[indice]};
+            }
+             return inversa; // TODO
+        }
 
     /*
      * Aquí teniu alguns exemples i proves relacionades amb aquests exercicis (vegeu `main`)
@@ -393,9 +725,62 @@ class Entrega {
     /*
      * Determinau si el graf és connex. Podeu suposar que `g` no és dirigit.
      */
-    static boolean exercici1(int[][] g) {
-      return false; // TO DO
-    }
+     static boolean exercici1(int[][] g) {
+            //Inicialització d'un contador a 0
+            int cont=0;
+            //declaració de un boolea
+            boolean punts=false;
+            //Bucle per buidar g
+            for(int indice=0;indice<g.length&&!punts;indice++){
+                try{
+                    if(g.length>0){
+                        cont=indice;
+                        punts=true;
+                    }
+                }
+                catch(Exception e){      
+                }             
+            }
+            //Tornam un valor o un altre depenent del resultat del boolea
+            if(!punts){
+                return punts;
+            }
+            //bucle per buidar g
+            for (int[] x : g) {
+                int contador = 0;
+                //Condicional comprovat amb el submetode ExisteixRecorregut
+                if (!ExisteixRecorregut(g,x,contador,cont)) {
+                    return false; 
+                }
+            }
+            return true;
+        }
+        static boolean ExisteixRecorregut(int[][] g, int[] x, int contador, final int cont) {
+            //Condicional que comprova el valor del contador amb el tamany de l'array
+            if (contador>g.length) {
+                //tornam false
+                return false;
+            }
+            //Declaracio del boolea a false
+            boolean encontrado;
+             encontrado=false;
+            //Condicional
+                if (x.length==0) {
+                return false;
+            }
+            //Buidam l array
+              for (int elemento : x) {
+                if (elemento==cont) {
+                    return true;
+                }
+                encontrado=ExisteixRecorregut(g,g[elemento],contador+1,cont);
+                if (encontrado) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
 
     /*
      * Donat un tauler d'escacs d'amplada `w` i alçada `h`, determinau quin és el mínim nombre de
@@ -409,16 +794,134 @@ class Entrega {
      * Retornau el nombre mínim de moviments, o -1 si no és possible arribar-hi.
      */
     static int exercici2(int w, int h, int i, int j) {
-      return -1; // TO DO
-    }
+            int[] vec1=null;
+            int[] vec2=null;
+            int[][] tablero=new int[w][h];
+            int num=0;
+            for (int indice=0;indice<w;indice++) {
+                for (int indice1=0;indice1<h;indice1++) {
+                  if (num==i) {
+                    vec1 = new int[]{indice, indice1};
+                    }
+                  if (num==j) {
+                    vec2=new int[]{indice, indice1}; 
+                    }
+               tablero[indice][indice1]=num++;
+                }
+            }
+            //Ara hem trobat les pisicions i y j
+            //Verificacio si existeixen les posicions en les cuals estan
+            if (vec1==null||vec2==null) {
+              return -1;
+            }
+            int solucio=RecorregutCavall(tablero, 0, vec1, vec2, tablero.length + 1);
+            return solucio;
+        }
+
+        static int RecorregutCavall(int[][] tablero, int p, int[] vec1, int[] vec2, int distancia) {
+            //Declaracio d'una variable
+            boolean bool1=false;
+            if (vec1[0]>=tablero.length||vec1[1]>=tablero[0].length||vec1[0]< 0||vec1[1]<0) {bool1=true;}
+            
+            if (bool1) {
+                return -1;
+            }//Hem comprovat si es troba en el tablero
+
+            boolean bool2=false;
+            if (dist(vec1,vec2)>distancia) {bool2=true;}
+            
+            if (bool2) {
+                return -1;
+            }//Comprovam si la distancia es major que la distancia permesa
+
+           boolean bool3=false;
+            if (tablero[vec1[0]][vec1[1]]==tablero[vec2[0]][vec2[1]]) {bool3=true;}
+            
+            if (bool3) {
+                return p;
+            }//Comprovam si la posicio actual es la posicio a la qual volem arribar
+
+            boolean bool4=false;
+            if (p>tablero.length+5) {bool4=true;}
+            if (bool4) {
+                return -1;
+            }//Comprovam si esteim dins el rang permes
+             //Moviments del caball
+              int[] vectorX = {1, -1, 1, -1, 2, -2, -2, 2};
+              int[] vectorY = {2, 2, -2, -2, -1, 1, -1, 1};
+           int pp;
+             pp=p;
+                 p=-1;
+            for (int indice=0;indice<vectorX.length;indice++) {
+                  int pases=RecorregutCavall(tablero,pp+1,new int[]{vec1[0]+vectorX[indice],vec1[1]+vectorY[indice]},vec2,distancia);
+                     if (pases==-1) {
+                  continue;
+                }
+                     if (pases<p||p==-1||p==0) {
+                  p=pases;
+                }
+            } //Moviments del caball
+            return p;
+        }
+        static int dist(int[] vec1, int[] vec2) {
+            int x=vec1[0]-vec2[0];
+                 if (x<0) {
+                x=-x;
+             }
+            int y=vec1[1]-vec2[1];
+                if (y<0) {
+                y=-y;
+            }
+                if (y<x) {
+                return x;
+            }
+            return y;
+        }
+
 
     /*
      * Donat un arbre arrelat (graf dirigit `g`, amb arrel `r`), decidiu si el vèrtex `u` apareix
      * abans (o igual) que el vèrtex `v` al recorregut en preordre de l'arbre.
      */
     static boolean exercici3(int[][] g, int r, int u, int v) {
-      return false; // TO DO
-    }
+            //Declaració d'una variable booleanan per retornar el valor
+            boolean bool=false;
+            //Declaració de una variable per almacenar la solucio
+            int solucio;
+            //declaracio d'un array boolea
+            boolean [] arraybool= new boolean[1];
+                  solucio=preordre(g, r, u, v, arraybool);
+            //Condicional per trobar el valor a retornar depenguent del resultat
+            if(solucio >= 0) {
+                bool=true;
+            }
+            else {
+                bool=false;
+            }
+            //retornam el resultat
+            return bool;
+        }
+//Submetode que recorr en preordre
+        static int preordre(int[][] g, int r, int u, int v, boolean[] apareix) {
+               if (r==u) {
+                apareix[0]=true;
+            }
+                if (r==v) {
+                if (apareix[0]) {
+                    return 0;
+                 } else {
+                    return -1;
+                   }
+               }
+                 for (int x : g[r]) {
+                 int resultado = preordre(g, x, u, v, apareix);
+                   if (resultado!=2) {
+                     return resultado;
+                }
+            }
+            return 2;
+        }
+
 
     /*
      * Donat un recorregut en preordre (per exemple, el primer vèrtex que hi apareix és `preord[0]`)
@@ -427,9 +930,33 @@ class Entrega {
      *
      * L'altura d'un arbre arrelat és la major distància de l'arrel a les fulles.
      */
-    static int exercici4(int[] preord, int[] d) {
-      return -1; // TO DO
-    }
+      static int exercici4(int[] preord, int[] d) {
+            //Declaració d'un array per almacenar els elements
+            int[] elements = new int[d.length];
+            //Declaració de una variable per guardar l altura maxima trobada
+            int altura=0; 
+            //Declaració d un indice inicialitzat a -1
+            int indice=-1;
+// Bucle per buidar l array
+            for (int x : d) {
+                if (indice+1>altura) {
+                    altura=indice+1;
+                      }
+                elements[++indice]=x;
+                elements[indice]-=1;
+                //Bucle
+                while (elements[indice] <= 0) {
+                    //Inice=-1
+                    indice -= 1;
+                    if (indice<0){
+                        return altura;
+                    }
+                          }
+                }
+            //Retornam el valor
+            return altura;
+        }
+
 
     /*
      * Aquí teniu alguns exemples i proves relacionades amb aquests exercicis (vegeu `main`)
@@ -510,7 +1037,10 @@ class Entrega {
     /*
      * Calculau el mínim comú múltiple de `a` i `b`.
      */
-    static int exercici1(int a, int b) {
+   static int exercici1(int a, int b) {
+    //Valor absolut!!!!
+           if(a<0) {  a=-a; }  
+            if(b<0) {  b=-b;  }
          //Declaración de las variables denominador, numerador
         int denominador, numerador;
         //Comprobamos cual de los dos números és más grande a o b para asignar los valores del denominador i númerados
@@ -554,8 +1084,68 @@ class Entrega {
      * Podeu suposar que `n > 1`. Recordau que no no podeu utilitzar la força bruta.
      */
     static int[] exercici2(int a, int b, int n) {
-      return new int[] {}; // TO DO
-    }
+                //Declaración de las variables denominador, numerador
+        int denominador, numerador;
+        //Comprobamos cual de los dos números és más grande a o b para asignar los valores del denominador i númerados
+        if (a>n) {
+            numerador=a;
+            denominador=n;
+        }
+        else{
+            numerador=n;
+            denominador=a;
+        }
+        //Declaramos la variable resto inicializada a 1;
+        int resto=1;
+        //declaración de un bucle que sigue mientras el resto sea diferente a 0
+        while(resto!=0) {
+            //Calculamos el resto
+            resto=numerador%denominador;
+            //Condicional que comprueba si el resto es 0 para salir del bucle
+            if (resto==0) {
+                break;
+            }
+            //Asignación del nuevo numerador y divisor
+            numerador=denominador;
+            denominador=resto;
+        }
+        int mcd=denominador;
+
+        //Declaram un array inicializat a 0
+        int [] array=new int[0];
+        //Miram si te solucio
+         if (b%mcd!=0) {
+             return array;
+            }
+        //realitzam la resta dels nombres ja que son masa grans segons quins utilitzant els residus
+        n/=mcd;
+        a/=mcd;
+        b/=mcd;
+        int x;
+        int[] arrayint=Euclides(a, n);
+            int t = arrayint[0];
+         x=((t%n+n)%n)*b%n;
+         List<Integer> Solucion=new ArrayList<>();
+         for (int indice=0;indice<mcd;indice++) {
+             Solucion.add((x+ indice*n)%(n*mcd));
+         } //Ara hem comprovat totes les solucions
+          //Derreres pases per tornar el rezultat
+         int[]resultat=new int[Solucion.size()];
+         for (int indice=0;indice<Solucion.size();indice++) {
+             resultat[indice]=Solucion.get(indice);
+            }
+         return resultat;
+        }
+        static int[] Euclides(int a, int n) {
+            if (n==0) {
+                return new int[]{1, 0};
+            }
+            int[] result = Euclides(n, a % n);
+            int int1 = result[1];
+            int int2 = result[0] - (a / n) * result[1];
+            return new int[]{int1, int2};
+        }
+
 
     /*
      * Donats `a != 0`, `b != 0`, `c`, `d`, `m > 1`, `n > 1`, determinau si el sistema
@@ -566,8 +1156,59 @@ class Entrega {
      * té solució.
      */
     static boolean exercici3(int a, int b, int c, int d, int m, int n) {
-      return false; // TO DO
-    }
+            //Declaración del mcd de a i m
+            int mcd1;
+            mcd1=mcd(a,m);
+             //Declaración del mcd de a i m
+            int mcd2;
+            mcd2=mcd(b,n);
+            //residuo entre c i el mcd de a i m
+            int residuo1;
+            residuo1=c%mcd1;
+            //residuo entre d i el mcd de b i n
+            int residuo2;
+            residuo2=d%mcd2;
+            int dif;
+            dif=(d/mcd2-c/mcd1)%mcd(m/mcd1,n/mcd2);
+            //Declaracion de una variable booleana
+            boolean bool;
+            if (dif==0 && residuo1==0 && residuo2==0) {
+                bool=true;
+            }
+            else {
+                bool=false;
+            }
+            return bool;
+        }
+    
+          static int mcd(int a, int b) {
+              //Declaración de las variables denominador, numerador
+        int denominador, numerador;
+        //Comprobamos cual de los dos números és más grande a o b para asignar los valores del denominador i númerados
+        if (a>b) {
+            numerador=a;
+            denominador=b;
+        }
+        else{
+            numerador=b;
+            denominador=a;
+        }
+        //Declaramos la variable resto inicializada a 1;
+        int resto=1;
+        //declaración de un bucle que sigue mientras el resto sea diferente a 0
+        while(resto!=0) {
+            //Calculamos el resto
+            resto=numerador%denominador;
+            //Condicional que comprueba si el resto es 0 para salir del bucle
+            if (resto==0) {
+                break;
+            }
+            //Asignación del nuevo numerador y divisor
+            numerador=denominador;
+            denominador=resto;
+        }
+        return denominador;
+        }
 
     /*
      * Donats `n` un enter, `k > 0` enter, i `p` un nombre primer, retornau el residu de dividir n^k
@@ -580,8 +1221,25 @@ class Entrega {
      * qüestió de segons independentment de l'entrada.
      */
     static int exercici4(int n, int k, int p) {
-      return -1; // TO DO
-    }
+            //Calculam fi 
+            int fi=p-1; 
+            //Reduim k
+            k=k%fi; 
+            //Comprovam que n esta dins el rang
+            n=((n%p)+p)%p;
+            //declaracio d una variable inicialitzada a 0 amb la cual es tornarà el resultat
+            int residuSol=1;
+            //Calculam
+            while (k>0) {
+                if (k%2==1) {
+             residuSol=(residuSol*n)%p; 
+                }
+                n=(n*n)%p;
+                k = k / 2;
+            }
+       //Retornam el valor
+            return ((residuSol%p)+p)%p;
+        }
 
     /*
      * Aquí teniu alguns exemples i proves relacionades amb aquests exercicis (vegeu `main`)
